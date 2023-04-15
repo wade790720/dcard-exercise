@@ -72,8 +72,10 @@ const App = () => {
 
   return (
     <div className={styled.container}>
-      <input type="text" onChange={handleInputChange} />
-      <div className={styled.scroll}>
+      <div className={styled.input}>
+        <input type="text" onChange={handleInputChange} />
+      </div>
+      <div className={styled.inner}>
         {repos.map((repo, index) => {
           return <RepoItem
             key={repo.id + index}

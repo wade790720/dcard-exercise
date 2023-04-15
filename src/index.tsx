@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Profiler } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -9,7 +9,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Profiler id="myAppProfiler" onRender={(id, phase, actualDuration) => {
+      console.log(`${id} ${phase} ${actualDuration}ms`);
+    }}>
+      <App />
+    </Profiler>
   </React.StrictMode>
 );
 
