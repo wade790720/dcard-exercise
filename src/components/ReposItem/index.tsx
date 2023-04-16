@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from './ReposItem.module.scss'
 import { to3DigitsThousand } from 'utils/numberUtil'
 import useElementOnScreen from "hooks/useElementOnScreen"
-import { useEffect } from 'react'
 
 type RepoItemProps = {
     name?: string,
@@ -41,7 +40,7 @@ const RepoItem = React.memo(({
 
     return (
         <div className={styled.container} style={props.style} ref={last ? (containerRef as unknown as React.RefObject<HTMLDivElement>) : null}>
-            <a className={styled.author} href={url} target="_blank" rel="noopener noreferrer" aria-label="author"/>
+            <a className={styled.author} href={url} target="_blank" rel="noopener noreferrer" aria-label="author" />
             <div className={styled.name}>{name}</div>
             <div className={styled.desc}>{desc}</div>
             <div className={styled.topics}>

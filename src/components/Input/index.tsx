@@ -1,10 +1,10 @@
-import styled from './SearchInput.module.scss'
+import styled from './Input.module.scss'
 
-type SearchInputProps = {
+type InputProps = {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const SearchInput = ({ ...props }: SearchInputProps) => {
+const Input = ({ ...props }: InputProps) => {
     return (
         <div className={styled.wrapper}>
             <input type="text" onChange={props.onChange} />
@@ -12,4 +12,4 @@ const SearchInput = ({ ...props }: SearchInputProps) => {
     )
 }
 
-export default SearchInput
+export default Input
