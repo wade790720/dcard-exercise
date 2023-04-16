@@ -1,0 +1,57 @@
+$input-background: rgba(57, 63, 84, 0.8);
+$input-text-inactive: #7881a1;
+$input-text-active: #bfd2ff;
+
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  padding: 1.4rem 2rem 1.6rem;
+  max-width: 400px;
+  width: 100%;
+  border-radius: 2px;
+  background: $input-background;
+
+  &:after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    height: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    background: linear-gradient(to right, #b294ff, #57e6e6, #feffb8, #57e6e6, #b294ff, #57e6e6);
+    background-position: 0 0;
+    background-size: 500% auto;
+    content: '';
+    animation: gradient 3s linear infinite;
+  }
+
+  input {
+    flex-grow: 1;
+    outline: none;
+    border-style: none;
+    background: transparent;
+    color: $input-text-active;
+    vertical-align: middle;
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+
+    &::-webkit-input-placeholder {
+      color: $input-text-inactive;
+    }
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 100% 0;
+  }
+}
+

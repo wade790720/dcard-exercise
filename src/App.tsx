@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useCallback } from 'react';
 import RepoItem from 'components/ReposItem';
+import SearchInput from 'components/SearchInput';
 import styled from "./App.module.scss"
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
@@ -72,9 +73,7 @@ const App = () => {
 
   return (
     <div className={styled.container}>
-      <div className={styled.input}>
-        <input type="text" onChange={handleInputChange} />
-      </div>
+      <SearchInput onChange={handleInputChange} />
       <div className={styled.inner}>
         {repos.map((repo, index) => {
           return <RepoItem
