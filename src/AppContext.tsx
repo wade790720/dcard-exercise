@@ -63,8 +63,9 @@ export const AppProvider = ({ children }: ReactProps.WithChildren) => {
     }, [query, page]);
 
     const fetchMore = useCallback(() => {
+        if (loading) return
         setPage((prevPage) => prevPage + 1);
-    }, []);
+    }, [loading]);
 
     const debouncedSearch = debounce((value: string) => {
         setQuery(value);
