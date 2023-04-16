@@ -1,8 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useCallback } from 'react';
 import RepoItem from 'components/ReposItem';
 import SearchInput from 'components/SearchInput';
 import styled from "./App.module.scss"
+import { debounce } from './utils/debounce';
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
 
@@ -19,6 +19,7 @@ interface Repo {
     name: string;
   }
 }
+const COUNT = 30;
 
 const App = () => {
   const [repos, setRepos] = useState<Repo[]>([]);
@@ -31,7 +32,7 @@ const App = () => {
     const fetchRepos = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_URL}${query}&per_page=30&page=${page}`);
+        const res = await fetch(`${API_URL}${query}&per_page=${COUNT}&page=${page}`);
         const data = await res.json();
         if (data.items) {
           setRepos(prevRepos => [...prevRepos, ...data.items]);
@@ -52,19 +53,11 @@ const App = () => {
     setPage(prevPage => prevPage + 1);
   }, [])
 
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return function (this: any, ...args: any[]) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(this, args), delay);
-    };
-  };
-
-  const debouncedSearch = useCallback(debounce((value: string) => {
+  const debouncedSearch = debounce((value: string) => {
     setQuery(value);
     setPage(1);
     setRepos([]);
-  }, 500), []);
+  }, 500);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -86,7 +79,7 @@ const App = () => {
             star={repo.stargazers_count}
             url={repo.html_url}
             issue={repo.open_issues_count}
-            last={repos.length - 1 === index}
+            last={(repos.length > COUNT) && repos.length - 1 === index}
             fetchMore={fetchMore}
           />
         })}
