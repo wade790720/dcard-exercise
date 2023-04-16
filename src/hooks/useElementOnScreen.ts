@@ -11,31 +11,37 @@ const useElementOnScreen = ({
   rootMargin = "0px",
   threshold = 1.0,
 }: useElementOnScreenProps) => {
-  const [ready, setReady] = useState(false)
-  const targetRef = useRef<null | HTMLDivElement>(null)
-  const containerRef = useCallback((node: HTMLDivElement) => {
-    targetRef.current = node
-    setReady(!!node)
-  }, [])
-
-  const [isVisible, setIsVisible] = useState(false)
+  const observer = useRef<IntersectionObserver | null>(null)
+  const [isIntersecting, setIntersecting] = useState(false)
+  const [targetRef, setTargetRef] = useState<null | HTMLDivElement>(null)
+  
+  const handleObserve = ([entry]: IntersectionObserverEntry[]) => {
+    setIntersecting(entry.isIntersecting)
+  }
 
   useEffect(() => {
-    if (!ready) return
-
-    const observer = new IntersectionObserver(entries => {
-      const [entry] = entries
-      setIsVisible(entry.isIntersecting)
-    }, { root, rootMargin, threshold })
-
-    targetRef?.current && observer.observe(targetRef.current)
+    if (targetRef) {
+      observer.current = new IntersectionObserver(handleObserve, {
+        root,
+        rootMargin,
+        threshold,
+      })
+      observer.current.observe(targetRef)
+    }
 
     return () => {
-      targetRef?.current && observer.unobserve(targetRef.current)
+      if (observer.current && targetRef) {
+        observer.current.unobserve(targetRef)
+      }
     }
-  }, [root, rootMargin, threshold, ready])
+  }, [root, rootMargin, threshold, targetRef])
 
-  return { containerRef, isVisible }
+  const containerRef = useCallback((node: HTMLDivElement) => {
+    setTargetRef(node)
+    setIntersecting(false)
+  }, [])
+
+  return { containerRef, isIntersecting }
 }
 
 export default useElementOnScreen

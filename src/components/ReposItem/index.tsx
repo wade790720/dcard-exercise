@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
+import React from 'react'
 import styled from './ReposItem.module.scss'
 import { to3DigitsThousand } from 'utils/numberUtil'
 import useElementOnScreen from "hooks/useElementOnScreen"
@@ -17,7 +18,7 @@ type RepoItemProps = {
     fetchMore?: () => void
 } & ReactProps.Component
 
-const RepoItem = ({
+const RepoItem = React.memo(({
     name,
     desc,
     topics = [],
@@ -30,11 +31,11 @@ const RepoItem = ({
     fetchMore,
     ...props
 }: RepoItemProps) => {
-    const { containerRef, isVisible } = useElementOnScreen({})
+    const { containerRef, isIntersecting } = useElementOnScreen({ threshold: 1 })
 
     useEffect(() => {
-        if (last && isVisible && fetchMore) fetchMore()
-    }, [last, isVisible, fetchMore])
+        if (last && isIntersecting && fetchMore) fetchMore()
+    }, [last, isIntersecting, fetchMore])
 
     if (!name || !url) return null
 
@@ -62,6 +63,6 @@ const RepoItem = ({
             </div>
         </div>
     )
-}
+})
 
 export default RepoItem

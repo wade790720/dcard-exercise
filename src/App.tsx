@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import RepoItem from 'components/ReposItem';
+import React, { useEffect, useState, useCallback, lazy, Suspense } from 'react';
 import SearchInput from 'components/SearchInput';
 import styled from "./App.module.scss"
 import { debounce } from './utils/debounce';
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
+const RepoItem = lazy(() => import('./components/ReposItem'));
 
 interface Repo {
   id: number;
@@ -68,21 +68,23 @@ const App = () => {
     <div className={styled.container}>
       <SearchInput onChange={handleInputChange} />
       <div className={styled.inner}>
-        {repos.map((repo, index) => {
-          return <RepoItem
-            key={repo.id + index}
-            name={repo.full_name}
-            desc={repo.description}
-            topics={repo.topics}
-            license={repo.license?.name}
-            lang={repo.language}
-            star={repo.stargazers_count}
-            url={repo.html_url}
-            issue={repo.open_issues_count}
-            last={(repos.length > COUNT) && repos.length - 1 === index}
-            fetchMore={fetchMore}
-          />
-        })}
+        <Suspense fallback={<div>Loading...</div>}>
+          {repos.map((repo, index) => {
+            return <RepoItem
+              key={repo.id + index}
+              name={repo.full_name}
+              desc={repo.description}
+              topics={repo.topics}
+              license={repo.license?.name}
+              lang={repo.language}
+              star={repo.stargazers_count}
+              url={repo.html_url}
+              issue={repo.open_issues_count}
+              last={(repos.length >= COUNT) && repos.length - 1 === index}
+              fetchMore={fetchMore}
+            />
+          })}
+        </Suspense>
       </div>
       {loading && <div>Loading...</div>}
       {error && <div>Error: {error}</div>}
